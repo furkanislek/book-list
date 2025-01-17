@@ -1,4 +1,5 @@
-import 'package:fltter/pages/register.dart';
+import 'package:fltter/pages/home.dart';
+// import 'package:fltter/pages/register.dart';
 // import 'package:fltter/pages/settings.dart';
 import 'package:fltter/utils/theme.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: RegisterPage(),
+      body: Home(),
     );
   }
 }
