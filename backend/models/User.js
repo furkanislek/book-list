@@ -10,6 +10,15 @@ const UserSchema = new mongoose.Schema(
     phone: { type: String, required: true },
     password: { type: String, required: true },
     email: { type: String, required: true, unique: true },
+    favoriteBooks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }],
+    readingList: [{
+      book: { type: mongoose.Schema.Types.ObjectId, ref: 'Book' },
+      currentPage: Number,
+      totalPages: Number,
+      startDate: Date,
+      finishDate: Date,
+      status: { type: String, enum: ['reading', 'completed', 'want-to-read'] }
+    }]
   },
   { timestamps: true } 
 );

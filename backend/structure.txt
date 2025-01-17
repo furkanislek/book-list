@@ -1,0 +1,22 @@
+backend/
+├── controllers/
+│   ├── authController.js
+│   ├── userController.js
+│   ├── bookController.js
+│   ├── quoteController.js
+│   ├── followController.js
+│   └── searchController.js
+├── models/
+│   ├── User.js
+│   ├── Book.js
+│   ├── Quote.js
+│   ├── Follow.js
+│   └── ReadingProgress.js
+├── routes/
+│   ├── auth.js
+│   ├── users.js
+│   ├── books.js
+│   ├── quotes.js
+│   └── follows.js
+└── services/
+    └── bookApiService.js 
