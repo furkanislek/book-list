@@ -1,4 +1,6 @@
-import 'package:fltter/components/home/home.dart';
+import 'package:fltter/components/discover/add_quoter_modal.dart';
+import 'package:fltter/components/discover/discover.dart';
+import 'package:fltter/components/mylist/my_list.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -9,6 +11,45 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  int currentIndex = 1;
+
+  final List<Widget> pages = [
+    const HomeScreen(),
+    const DiscoverScreen(),
+    MyListScreen(),
+    const LibraryScreen(),
+    const ProfileScreen(),
+  ];
+
+  void showOptionsModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.format_quote),
+              title: const Text('Quotes'),
+              onTap: () {
+                Navigator.pop(context); // Modal'ı kapat
+                showQuoteModal(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.menu_book),
+              title: const Text('My Books'),
+              onTap: () {
+                Navigator.pop(context); // Modal'ı kapat
+                // My Books modal işlemi buraya eklenebilir
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,14 +57,25 @@ class _HomeState extends State<Home> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Book List'),
+            const Text('Book List'),
             IconButton(
-                onPressed: () {}, icon: const Icon(Icons.add_circle_outline))
+              onPressed: () => showOptionsModal(context),
+              icon: const Icon(Icons.add_circle_outline),
+            ),
           ],
         ),
       ),
-      body: HomeScreen(),
+      body: IndexedStack(
+        index: currentIndex,
+        children: pages,
+      ),
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: currentIndex,
+        onTap: (index) {
+          setState(() {
+            currentIndex = index; // Tıklanan sekmeyi aktif yap
+          });
+        },
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -49,6 +101,39 @@ class _HomeState extends State<Home> {
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.deepPurple,
       ),
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text('Home Screen'),
+    );
+  }
+}
+
+class LibraryScreen extends StatelessWidget {
+  const LibraryScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text('Library Screen'),
+    );
+  }
+}
+
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text('Profile Screen'),
     );
   }
 }

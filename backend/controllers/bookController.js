@@ -1,10 +1,45 @@
 const UserFavoriteBooks = require("../models/UserFavoriteBooks");
 const UserReadBooks = require("../models/UserReadBooks");
+const dotenv = require("dotenv");
+const axios = require("axios");
+
+dotenv.config();
+const fetchFromAPI = async (url) => {
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: process.env.API_KEY,
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to fetch data from API.");
+  }
+};
 
 exports.addFavoriteBook = async (req, res) => {
   try {
-    const { username, bookId, bookName, bookAuthor, readDate, bookImage } =
-      req.body;
+    const { username, bookId, readDate } = req.body;
+    let bookName = "Unknown Book";
+    let bookAuthor = "Unknown Author";
+    let bookImage = "https://pngimg.com/uploads/book/book_PNG2111.png";
+
+    const bookUrl = `https://api2.isbndb.com/book/${bookId}`;
+
+    try {
+      const bookData = await fetchFromAPI(bookUrl);
+      bookName = bookData?.book?.title || bookName;
+      bookImage = bookData?.book?.image || bookImage;
+      authors = bookData?.book?.authors || ["Anonim", "Test"];
+      bookAuthor = authors.join("-");
+    } catch (error) {
+      console.warn(
+        "Book name could not be fetched. Defaulting to 'Unknown Book'.",
+        error.message
+      );
+    }
 
     const newFavoriteBook = new UserFavoriteBooks({
       userFavId: `${username}_${bookId}`,
@@ -60,15 +95,27 @@ exports.deleteFavoriteBook = async (req, res) => {
 
 exports.addReadBook = async (req, res) => {
   try {
-    const {
-      username,
-      bookId,
-      bookName,
-      bookAuthor,
-      readDate,
-      bookImage,
-      currentPage,
-    } = req.body;
+    const { username, bookId, readDate, currentPage } = req.body;
+
+    let bookName = "Unknown Book";
+    let bookAuthor = "Unknown Author";
+    let bookImage = "https://pngimg.com/uploads/book/book_PNG2111.png";
+    let pages = 1000;
+    const bookUrl = `https://api2.isbndb.com/book/${bookId}`;
+
+    try {
+      const bookData = await fetchFromAPI(bookUrl);
+      bookName = bookData?.book?.title || bookName;
+      bookImage = bookData?.book?.image || bookImage;
+      authors = bookData?.book?.authors || ["Anonim", "Test"];
+      pages = bookData?.book?.pages || pages;
+      bookAuthor = authors.join("-");
+    } catch (error) {
+      console.warn(
+        "Book name could not be fetched. Defaulting to 'Unknown Book'.",
+        error.message
+      );
+    }
 
     const newReadBook = new UserReadBooks({
       userReadId: `${username}_${bookId}`,
@@ -79,6 +126,8 @@ exports.addReadBook = async (req, res) => {
       readDate,
       bookImage,
       currentPage,
+      pages,
+      currentStatus: 0,
     });
 
     await newReadBook.save();
@@ -105,7 +154,7 @@ exports.getReadBooks = async (req, res) => {
 
 exports.deleteReadBook = async (req, res) => {
   try {
-    const { userReadId } = req.params; 
+    const { userReadId } = req.params;
 
     const deletedReadBook = await UserReadBooks.findOneAndDelete({
       userReadId,
@@ -125,12 +174,12 @@ exports.deleteReadBook = async (req, res) => {
 
 exports.updateReadBook = async (req, res) => {
   try {
-    const { currentPage, userReadId } = req.body; 
+    const { currentPage, userReadId } = req.body;
 
     const updatedReadBook = await UserReadBooks.findOneAndUpdate(
       { userReadId },
       { currentPage },
-      { new: true } 
+      { new: true }
     );
 
     if (!updatedReadBook) {

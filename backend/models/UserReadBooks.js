@@ -9,7 +9,9 @@ const userReadBooksSchema = new mongoose.Schema(
     bookAuthor: { type: String, required: true },
     readDate: { type: Date, required: true },
     bookImage: { type: String, required: true },
-    currentPage: {type:Number, required:true}
+    currentPage: { type: Number, required: true },
+    currentStatus: { type: Number, required: true },
+    pages: { type: Number, required: true },
   },
   { timestamps: true }
 );

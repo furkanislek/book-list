@@ -6,5 +6,5 @@ const bookSchema = new Schema({
   publishDate: Date,
   coverImage: String,
   description: String,
-  pageCount: Number
-}); 
+  pageCount: Number,
+});

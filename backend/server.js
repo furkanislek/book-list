@@ -14,7 +14,7 @@ const app = express();
 app.use(bodyParser.json());
 
 app.use("/api/users", userRoutes);
-app.use("/api/book", bookRoutes);
+app.use("/api/userbook", bookRoutes);
 app.use("/api/quotes", quotesRoutes);
 app.use("/api/book", bookApiRoutes);
 app.use("/api/comments", commentsRoutes);

@@ -11,6 +11,9 @@ const QuotesSchema = new mongoose.Schema(
     favoriCount: { type: Number, required: true },
     bookId: { type: String, required: true },
     bookAuthor: { type: String, required: true },
+    bookName: { type: String, required: false },
+    bookImage: { type: String, required: false },
+    bookAuthor: { type: String, required: false },
     comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
   },
   { timestamps: true }
